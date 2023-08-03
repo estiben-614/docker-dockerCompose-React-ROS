@@ -1,0 +1,16 @@
+version: "3.4"
+services:
+ #Nombre del proyecto
+ ROS_DOCKER_REACT:
+   image: node:alpine
+   container_name: joistick_react_ros #Nombre que tendrá el contenedor
+   entrypoint: /bin/sh #Hace que al iniciar el contenedor entré a la terminal
+   ports:
+     - 8000:8000
+   working_dir: /srv/app #Ruta que encontraremos al navegar en el contenedor 
+   volumes:
+     - type: bind #Permite que los cambios en el directorio HOST se verán reflejados tanto con el contenedor, y en el local
+       source: ./ #En el contenedor se montará todo el directorio actual
+       target: /srv/app #Esta es la ruta donde se montará todo el directorio actual
+   tty: true #Permite que el contenedor continue corriendo 
+  #  command: "npm i --force && npm run dev"
