@@ -1,44 +1,29 @@
 import React, { useState } from 'react';
 import ReactNipple from 'react-nipple';
-import DebugView from 'react-nipple/lib/DebugView';
 import { io } from "socket.io-client";
 import ROSLIB from 'roslib';
+import { useEffect } from 'react';
 
-export default function JoistickROS() {
+//Conecta al client con el websocket server
+const socket=io('http://localhost:3000')
 
+export default function JoistickWSockets() {
+  //maneja el estado de conexión con el servidor
+
+    const [conexionWS, setConexionWS] = useState(false)
     const [ros, setRos] = useState(null);
+
+    useEffect(() => {
+      socket.on("connect",()=>setConexionWS(true))
+
+      
+    }, [])
   
-    // Conexión a ROS al montar el componente
-    React.useEffect(() => {
-      const url = 'ws://192.168.1.58:9090'; // Cambiar por la URL correcta del roscore del robot  
-      const ros = new ROSLIB.Ros({
-        url: url,
-      });
-  
-      ros.on('connection', function () {
-        console.log('Connected to ROS Bridge.');
-      });
-  
-      ros.on('error', function (error) {
-        console.log('Error connecting to ROS Bridge: ', error);
-      });
-  
-      ros.on('close', function () {
-        console.log('Connection to ROS Bridge closed.');
-      });
-  
-      setRos(ros);
-  
-      // Limpieza al desmontar el componente
-      return () => {
-        if (ros) {
-          ros.close();
-        }
-      };
-    }, []);
+    
+    
   
     const handleJoystickMove = (data) => {
-      if (ros) {
+      
         const twist = new ROSLIB.Message({
           linear: {
             x: data.x,
@@ -51,6 +36,8 @@ export default function JoistickROS() {
             z: 0.0,
           },
         });
+
+        //mensaje
         console.log(twist)
   
         const cmdVelTopic = new ROSLIB.Topic({
@@ -58,17 +45,29 @@ export default function JoistickROS() {
           name: '/cmd_vel',
           messageType: 'geometry_msgs/Twist',
         });
+
+        //topico
         console.log(cmdVelTopic)
+
+        //enviamos el mensaje y el topico al servidor
+        socket.emit('mensaje_a_topico',{
+          topico:cmdVelTopic,
+          mensaje:twist
+        })
   
-        cmdVelTopic.publish(twist);
+        // cmdVelTopic.publish(twist);
         
-      }
+      
     };
   
     return (
       <>
         {/* Agrega tu componente del joystick que dispare handleJoystickMove con las coordenadas x e y */}
         {/* Por ejemplo, puedes usar el componente que proporcionaste en preguntas anteriores */}
+
+        {
+          (conexionWS) ? (<h2>Conectado</h2>) : (<h2>Desconectado</h2>)
+        }
         <ReactNipple
           options={{
             mode: 'static',
