@@ -10,9 +10,9 @@ export default function JoistickROS() {
   
     // Conexión a ROS al montar el componente
     React.useEffect(() => {
-      const url = 'ws://192.168.1.58:9090'; // Cambiar por la URL correcta del roscore del robot  
+      const ros_master_url = 'ws://192.168.1.58:9090'; // Cambiar por la URL correcta del roscore del robot  
       const ros = new ROSLIB.Ros({
-        url: url,
+        url: ros_master_url,
       });
   
       ros.on('connection', function () {

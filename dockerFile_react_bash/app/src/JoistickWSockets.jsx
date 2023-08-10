@@ -23,17 +23,18 @@ export default function JoistickWSockets() {
     
   
     const handleJoystickMove = (data) => {
-      
+      const valorX=(data.x-768)/75
+      const valorZ=((data.y-369.6000061035156)*-1)/75
         const twist = new ROSLIB.Message({
           linear: {
-            x: data.x,
-            y: data.y,
+            x:valorX,
+            y: 0.0,
             z: 0.0,
           },
           angular: {
             x: 0.0,
             y: 0.0,
-            z: 0.0,
+            z: valorZ,
           },
         });
 
@@ -68,6 +69,7 @@ export default function JoistickWSockets() {
         {
           (conexionWS) ? (<h2>Conectado</h2>) : (<h2>Desconectado</h2>)
         }
+        <div>
         <ReactNipple
           options={{
             mode: 'static',
@@ -81,7 +83,10 @@ export default function JoistickWSockets() {
             height: 250,
           }}
           onMove={(evt, data) => handleJoystickMove(data.position)}
+          
         />
+
+        </div>
       </>
     );
   }
