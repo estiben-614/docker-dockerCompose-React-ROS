@@ -7,6 +7,6 @@ import JoistickBueno from './JoistickBueno'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <JoistickWSockets />
+    <JoistickBueno />
   </React.StrictMode>,
 )

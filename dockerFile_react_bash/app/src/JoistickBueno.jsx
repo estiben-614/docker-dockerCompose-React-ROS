@@ -14,8 +14,8 @@ export default function JoistickBueno() {
         if(!data.position){
             return
         }
-       
-        const valorX=(valores.position.x-768)/75
+        // const valorX=valores.position.x
+        const valorX=(valores.position.x-590.7999877929688)/75
         const valorY=((valores.position.y-369.6000061035156)*-1)/75
 
         setCoordenadas({
